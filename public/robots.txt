@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://suadda.github.io/Portofolio/sitemap.xml

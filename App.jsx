@@ -112,22 +112,15 @@ function NavBar({ active, setActive }) {
         {navItems.map(item => (
           <button
             key={item}
-            onClick={() => {
-              setActive(item);
-              const el = document.getElementById(item);
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}
-            aria-current={active === item ? "true" : undefined}
+            onClick={() => setActive(item)}
             style={{
-              padding: "6px 18px",
+              padding: "6px 20px",
               fontFamily: "'Inter', sans-serif", fontWeight: 500,
-              fontSize: 14, border: "none", borderRadius: 8,
+              fontSize: 14, border: "none", background: "none",
               cursor: "pointer",
-              color: active === item ? "#63ffc8" : "rgba(255,255,255,0.45)",
-              background: active === item ? "rgba(99,255,200,0.08)" : "transparent",
-              boxShadow: active === item ? "0 0 16px rgba(99,255,200,0.35)" : "none",
-              textShadow: active === item ? "0 0 12px rgba(99,255,200,0.55)" : "none",
-              transition: "color 0.25s, background 0.25s, box-shadow 0.25s, text-shadow 0.25s",
+              color: active === item ? "#fff" : "rgba(255,255,255,0.45)",
+              borderBottom: active === item ? "2px solid #63ffc8" : "2px solid transparent",
+              transition: "color 0.2s, border-color 0.2s",
               textTransform: "capitalize",
               whiteSpace: "nowrap",
             }}
@@ -472,7 +465,7 @@ function SectionLabel({ children }) {
   );
 }
 
-function Footer() {
+function Footer({ active }) {
   return (
     <footer style={{
       padding: "20px 5%",
@@ -487,31 +480,37 @@ function Footer() {
   );
 }
 
+function PageWrapper({ children, pageKey }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    setVisible(false);
+    const t = setTimeout(() => setVisible(true), 40);
+    return () => clearTimeout(t);
+  }, [pageKey]);
+
+  return (
+    <div style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? "none" : "translateY(12px)",
+      transition: "opacity 0.35s ease, transform 0.35s ease",
+      minHeight: "calc(100vh - 60px)",
+      display: "flex", flexDirection: "column", justifyContent: "space-between",
+    }}>
+      {children}
+    </div>
+  );
+}
+
 export default function App() {
   const [active, setActive] = useState("about");
 
-  // Scroll-spy: highlight the nav item for whichever section is centered in the viewport.
-  useEffect(() => {
-    const ids = ["about", "portfolio", "contact"];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      // Thin band across the vertical middle of the screen; whichever section
-      // crosses it becomes "active".
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  // scrollMarginTop offsets the fixed 60px navbar when scrolling to a section.
-  const sectionStyle = { scrollMarginTop: 60 };
+  const renderPage = () => {
+    switch (active) {
+      case "portfolio": return <PortfolioPage />;
+      case "contact":   return <ContactPage />;
+      default:          return <AboutPage />;
+    }
+  };
 
   return (
     <div style={{
@@ -523,10 +522,10 @@ export default function App() {
       <NavBar active={active} setActive={setActive} />
 
       <main style={{ paddingTop: 60 }}>
-        <section id="about" style={sectionStyle}><AboutPage /></section>
-        <section id="portfolio" style={sectionStyle}><PortfolioPage /></section>
-        <section id="contact" style={sectionStyle}><ContactPage /></section>
-        <Footer />
+        <PageWrapper pageKey={active}>
+          {renderPage()}
+          <Footer />
+        </PageWrapper>
       </main>
     </div>
   );

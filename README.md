@@ -1,16 +1,45 @@
-# React + Vite
+# Portfolio — Firdaus Rabby Mohamad Rafhael
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio website of Firdaus Rabby Mohamad Rafhael, Frontend Developer.
+Built with **React 19** and **Vite**, featuring a dark theme, scroll-reveal
+animations, and a responsive layout.
 
-Currently, two official plugins are available:
+🔗 **Live site:** _replace with your deployed URL (GitHub Pages / Vercel / Netlify)_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech stack
 
-## React Compiler
+- React 19
+- Vite 7
+- Plain CSS + inline styles (no UI framework)
+- Google Fonts: Syne, Space Mono, Inter
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run locally
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Then open the URL Vite prints (usually http://localhost:5173).
+
+## Build for production
+
+```bash
+npm run build     # outputs to /dist
+npm run preview   # preview the production build locally
+```
+
+## Editing your content
+
+All personal content lives in the `DATA` object at the top of `src/App.jsx`:
+name, role, about text, email, links, skills, and projects. Update it there.
+
+- Replace the profile photo at `public/foto3.jpeg`.
+- Update the page metadata (title, description, Open Graph image, canonical URL)
+  in `index.html` — remember to swap the placeholder domain for your real one.
+
+## SEO notes
+
+This is a client-side-rendered SPA, so the meta tags in `index.html` are what
+search engines and social scrapers read. For full content indexing, consider
+pre-rendering or migrating to a framework with SSG (Astro / Next.js).
