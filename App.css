@@ -1,0 +1,56 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  background: #0a0d14;
+  overflow-x: hidden;
+}
+
+button { outline: none; }
+
+/* Visible keyboard focus (accessibility) */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #63ffc8;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* About section: two columns on desktop, single column on mobile */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 0 52px;
+  align-items: start;
+}
+
+.about-photo {
+  position: sticky;
+  top: 80px;
+}
+
+@media (max-width: 640px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 36px 0;
+  }
+  .about-photo {
+    position: static;
+    top: auto;
+    max-width: 240px;
+    margin: 0 auto;
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

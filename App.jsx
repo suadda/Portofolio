@@ -49,6 +49,21 @@ const DATA = {
       tags: ["Figma"],
       link: "https://www.figma.com/design/dlPgBzgDZogkWLDYC1cB0x/Little-Paws?node-id=0-1&p=f",
       year: "2023",
+
+      detail: {
+        role: "UI/UX Designer",
+        overview:
+          "Little Paws adalah konsep aplikasi mobile untuk adopsi dan perawatan hewan peliharaan. Saya merancang alur pengguna dari pencarian hewan, detail profil, sampai proses adopsi — dengan fokus pada navigasi yang sederhana dan tampilan yang ramah untuk pengguna baru.",
+        stack: [
+          { name: "Figma", use: "Wireframe, high-fidelity mockup, dan prototype interaktif" },
+        ],
+        highlights: [
+          "Menyusun user flow lengkap dari onboarding sampai konfirmasi adopsi",
+          "Membuat komponen yang konsisten agar desain mudah dikembangkan",
+          "Prototype interaktif untuk menguji alur sebelum masuk tahap development",
+        ],
+        linkLabel: "Lihat desain di Figma",
+      },
     },
     // Add more REAL projects using the shape below (avoid placeholder/"#" links —
     // recruiters spot filler immediately, and dead links hurt the impression):
@@ -58,6 +73,15 @@ const DATA = {
     //   tags: ["React", "Tailwind"],
     //   link: "https://link-ke-project-atau-repo",
     //   year: "2024",
+    //   detail: {
+    //     role: "Frontend Developer",
+    //     overview: "Cerita lengkap project: masalah, solusi, dan hasilnya.",
+    //     stack: [
+    //       { name: "React", use: "Untuk apa kamu pakai ini di project tersebut" },
+    //     ],
+    //     highlights: ["Hal penting 1", "Hal penting 2"],
+    //     linkLabel: "Buka project",
+    //   },
     // },
   ],
 };
@@ -96,7 +120,7 @@ function GlowCursor() {
   );
 }
 
-function NavBar({ active, setActive }) {
+function NavBar({ active, onNavigate }) {
   const navItems = ["about", "portfolio", "contact"];
 
   return (
@@ -112,15 +136,18 @@ function NavBar({ active, setActive }) {
         {navItems.map(item => (
           <button
             key={item}
-            onClick={() => setActive(item)}
+            onClick={() => onNavigate(item)}
+            aria-current={active === item ? "true" : undefined}
             style={{
-              padding: "6px 20px",
+              padding: "6px 18px",
               fontFamily: "'Inter', sans-serif", fontWeight: 500,
-              fontSize: 14, border: "none", background: "none",
+              fontSize: 14, border: "none", borderRadius: 8,
               cursor: "pointer",
-              color: active === item ? "#fff" : "rgba(255,255,255,0.45)",
-              borderBottom: active === item ? "2px solid #63ffc8" : "2px solid transparent",
-              transition: "color 0.2s, border-color 0.2s",
+              color: active === item ? "#63ffc8" : "rgba(255,255,255,0.45)",
+              background: active === item ? "rgba(99,255,200,0.08)" : "transparent",
+              boxShadow: active === item ? "0 0 16px rgba(99,255,200,0.35)" : "none",
+              textShadow: active === item ? "0 0 12px rgba(99,255,200,0.55)" : "none",
+              transition: "color 0.25s, background 0.25s, box-shadow 0.25s, text-shadow 0.25s",
               textTransform: "capitalize",
               whiteSpace: "nowrap",
             }}
@@ -342,15 +369,16 @@ function AboutPage() {
   );
 }
 
-function PortfolioPage() {
+function PortfolioPage({ onSelect }) {
   const [ref, inView] = useInView(0.05);
   return (
     <div ref={ref} style={{ padding: "80px 5% 60px", maxWidth: 900, margin: "0 auto" }}>
       <SectionLabel>Portfolio</SectionLabel>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {DATA.projects.map((p, i) => (
-          <a key={p.title} href={p.link} style={{
+          <button key={p.title} onClick={() => onSelect(p)} style={{
             display: "block", textDecoration: "none",
+            width: "100%", textAlign: "left", font: "inherit", cursor: "pointer",
             padding: "28px 32px", borderRadius: 8,
             border: "1px solid rgba(255,255,255,0.08)",
             background: "rgba(255,255,255,0.02)",
@@ -377,7 +405,7 @@ function PortfolioPage() {
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.5)", margin: "0 0 16px" }}>
               {p.desc}
             </p>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
               {p.tags.map(t => (
                 <span key={t} style={{
                   fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: "0.08em",
@@ -387,10 +415,160 @@ function PortfolioPage() {
                   {t}
                 </span>
               ))}
+              <span style={{
+                marginLeft: "auto",
+                fontFamily: "'Space Mono', monospace", fontSize: 11,
+                color: "rgba(99,255,200,0.75)",
+              }}>
+                Lihat detail →
+              </span>
             </div>
-          </a>
+          </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function ProjectDetailPage({ project, onBack }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), 40);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Falls back gracefully when a project has no `detail` block yet.
+  const d = project.detail || {};
+  const stack = d.stack || project.tags.map(t => ({ name: t, use: null }));
+
+  return (
+    <div style={{
+      padding: "80px 5% 60px", maxWidth: 900, margin: "0 auto",
+      minHeight: "calc(100vh - 60px)",
+      opacity: show ? 1 : 0,
+      transform: show ? "none" : "translateY(16px)",
+      transition: "opacity 0.45s ease, transform 0.45s ease",
+    }}>
+      <button
+        onClick={onBack}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 8,
+          background: "none", border: "none", cursor: "pointer", padding: 0,
+          fontFamily: "'Space Mono', monospace", fontSize: 12,
+          color: "rgba(255,255,255,0.4)", marginBottom: 36,
+          transition: "color 0.2s",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.color = "#63ffc8"; }}
+        onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
+      >
+        ← Kembali ke portfolio
+      </button>
+
+      <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap", marginBottom: 10 }}>
+        <h1 style={{
+          fontFamily: "'Syne', sans-serif", fontWeight: 800,
+          fontSize: "clamp(28px, 4.5vw, 46px)", color: "#fff",
+          margin: 0, lineHeight: 1.1,
+        }}>
+          {project.title}
+        </h1>
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+          {project.year}
+        </span>
+      </div>
+
+      {d.role && (
+        <p style={{
+          fontFamily: "'Space Mono', monospace", fontSize: 12,
+          letterSpacing: "0.08em", color: "#63ffc8", margin: "0 0 28px",
+        }}>
+          {d.role}
+        </p>
+      )}
+
+      <p style={{
+        fontFamily: "'Inter', sans-serif", fontSize: 16, lineHeight: 1.85,
+        color: "rgba(255,255,255,0.62)", margin: "0 0 44px", maxWidth: 680,
+      }}>
+        {d.overview || project.desc}
+      </p>
+
+      <h2 style={{
+        fontFamily: "'Space Mono', monospace", fontSize: 11, letterSpacing: "0.14em",
+        textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 18px",
+      }}>
+        Tools &amp; Teknologi
+      </h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 44 }}>
+        {stack.map(s => (
+          <div key={s.name} style={{
+            padding: "16px 20px", borderRadius: 8,
+            border: "1px solid rgba(255,255,255,0.07)",
+            background: "rgba(255,255,255,0.02)",
+          }}>
+            <span style={{
+              fontFamily: "'Space Mono', monospace", fontSize: 12,
+              color: "#63ffc8", letterSpacing: "0.06em",
+            }}>
+              {s.name}
+            </span>
+            {s.use && (
+              <p style={{
+                fontFamily: "'Inter', sans-serif", fontSize: 14, lineHeight: 1.7,
+                color: "rgba(255,255,255,0.45)", margin: "6px 0 0",
+              }}>
+                {s.use}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {d.highlights && d.highlights.length > 0 && (
+        <>
+          <h2 style={{
+            fontFamily: "'Space Mono', monospace", fontSize: 11, letterSpacing: "0.14em",
+            textTransform: "uppercase", color: "rgba(255,255,255,0.3)", margin: "0 0 18px",
+          }}>
+            Yang Dikerjakan
+          </h2>
+          <ul style={{ margin: "0 0 48px", padding: 0, listStyle: "none", maxWidth: 680 }}>
+            {d.highlights.map(h => (
+              <li key={h} style={{
+                display: "flex", gap: 12, marginBottom: 12,
+                fontFamily: "'Inter', sans-serif", fontSize: 15, lineHeight: 1.75,
+                color: "rgba(255,255,255,0.55)",
+              }}>
+                <span style={{ color: "#63ffc8", flexShrink: 0 }}>—</span>
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <a
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: "inline-block", textDecoration: "none",
+          padding: "14px 30px", borderRadius: 8,
+          fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 15,
+          color: "#0a0d14", background: "#63ffc8",
+          transition: "box-shadow 0.25s, transform 0.25s",
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = "0 0 24px rgba(99,255,200,0.4)";
+          e.currentTarget.style.transform = "translateY(-2px)";
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = "none";
+          e.currentTarget.style.transform = "none";
+        }}
+      >
+        {d.linkLabel || "Buka project"} ↗
+      </a>
     </div>
   );
 }
@@ -465,7 +643,7 @@ function SectionLabel({ children }) {
   );
 }
 
-function Footer({ active }) {
+function Footer() {
   return (
     <footer style={{
       padding: "20px 5%",
@@ -474,43 +652,67 @@ function Footer({ active }) {
       fontFamily: "'Space Mono', monospace", fontSize: 11,
       color: "rgba(255,255,255,0.18)",
     }}>
-      <span>© 2025 {DATA.name}</span>
+      <span>© {new Date().getFullYear()} {DATA.name}</span>
       <span>Built with React + Vite</span>
     </footer>
   );
 }
 
-function PageWrapper({ children, pageKey }) {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    setVisible(false);
-    const t = setTimeout(() => setVisible(true), 40);
-    return () => clearTimeout(t);
-  }, [pageKey]);
-
-  return (
-    <div style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? "none" : "translateY(12px)",
-      transition: "opacity 0.35s ease, transform 0.35s ease",
-      minHeight: "calc(100vh - 60px)",
-      display: "flex", flexDirection: "column", justifyContent: "space-between",
-    }}>
-      {children}
-    </div>
-  );
-}
-
 export default function App() {
   const [active, setActive] = useState("about");
+  const [selected, setSelected] = useState(null); // null = main scroll page
 
-  const renderPage = () => {
-    switch (active) {
-      case "portfolio": return <PortfolioPage />;
-      case "contact":   return <ContactPage />;
-      default:          return <AboutPage />;
+  // Scroll-spy: highlight the nav item for whichever section is centered in the
+  // viewport. Skipped in detail view, where the sections aren't mounted.
+  useEffect(() => {
+    if (selected) return;
+    const ids = ["about", "portfolio", "contact"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      // Thin band across the vertical middle of the screen; whichever section
+      // crosses it becomes "active".
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [selected]);
+
+  const openProject = (project) => {
+    setSelected(project);
+    setActive("portfolio");
+    window.scrollTo({ top: 0 });
+  };
+
+  // Return to the main page and land back on the portfolio section.
+  const closeProject = () => {
+    setSelected(null);
+    requestAnimationFrame(() => {
+      document.getElementById("portfolio")?.scrollIntoView({ block: "start" });
+    });
+  };
+
+  // Nav clicks work from either view: leave the detail page first if needed.
+  const goToSection = (id) => {
+    setActive(id);
+    if (selected) {
+      setSelected(null);
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ block: "start" });
+      });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // scrollMarginTop offsets the fixed 60px navbar when scrolling to a section.
+  const sectionStyle = { scrollMarginTop: 60 };
 
   return (
     <div style={{
@@ -519,13 +721,19 @@ export default function App() {
       overflowX: "hidden", position: "relative",
     }}>
       <GlowCursor />
-      <NavBar active={active} setActive={setActive} />
+      <NavBar active={active} onNavigate={goToSection} />
 
       <main style={{ paddingTop: 60 }}>
-        <PageWrapper pageKey={active}>
-          {renderPage()}
-          <Footer />
-        </PageWrapper>
+        {selected ? (
+          <ProjectDetailPage project={selected} onBack={closeProject} />
+        ) : (
+          <>
+            <section id="about" style={sectionStyle}><AboutPage /></section>
+            <section id="portfolio" style={sectionStyle}><PortfolioPage onSelect={openProject} /></section>
+            <section id="contact" style={sectionStyle}><ContactPage /></section>
+          </>
+        )}
+        <Footer />
       </main>
     </div>
   );
