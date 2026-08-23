@@ -4,7 +4,7 @@ Personal portfolio website of Firdaus Rabby Mohamad Rafhael, Frontend Developer.
 Built with **React 19** and **Vite**, featuring a dark theme, scroll-reveal
 animations, and a responsive layout.
 
-🔗 **Live site:** _replace with your deployed URL (GitHub Pages / Vercel / Netlify)_
+🔗 **Live site:**https://suadporto.netlify.app/
 
 ## Tech stack
 
