@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://suadda.github.io/Portofolio/sitemap.xml
+Sitemap: https://suadporto.netlify.app/sitemap.xml
