@@ -4,7 +4,7 @@ Personal portfolio website of Firdaus Rabby Mohamad Rafhael, Frontend Developer.
 Built with **React 19** and **Vite**, featuring a dark theme, scroll-reveal
 animations, and a responsive layout.
 
-🔗 **Live site:**https://suadporto.netlify.app/
+🔗 **Live site:** https://suadporto.netlify.app/
 
 ## Tech stack
 
@@ -33,10 +33,6 @@ npm run preview   # preview the production build locally
 
 All personal content lives in the `DATA` object at the top of `src/App.jsx`:
 name, role, about text, email, links, skills, and projects. Update it there.
-
-- Replace the profile photo at `public/foto3.jpeg`.
-- Update the page metadata (title, description, Open Graph image, canonical URL)
-  in `index.html` — remember to swap the placeholder domain for your real one.
 
 ## SEO notes
 
