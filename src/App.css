@@ -485,16 +485,21 @@ button:focus-visible {
   transform: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .about-grid {
-    grid-template-columns: 1fr;
-    gap: 36px 0;
+    grid-template-columns: 1fr 120px;
+    gap: 0 24px;
   }
   .about-photo {
     position: static;
     top: auto;
-    max-width: 240px;
-    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-grid {
+    grid-template-columns: 1fr 90px;
+    gap: 0 16px;
   }
 }
 

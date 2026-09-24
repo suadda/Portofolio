@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link, NavLink, useParams, useNavigate, useLocation } from "react-router-dom";
 import './App.css';
+import profilePhoto from '/foto3.webp';
 
 const DATA = {
   name: "Firdaus Rabby Mohamad Rafhael",
@@ -256,8 +257,8 @@ function ProfilePhoto() {
   return (
     <div className="profile-photo-wrap">
       <div className="profile-photo-inner">
-        {photo ? (
-          <img src={photo} alt="Foto Profil" />
+        {profilePhoto ? (
+          <img src={profilePhoto} alt="Foto Profil" />
         ) : (
           <div className="profile-photo-placeholder">
             <span style={{ fontSize: 28, opacity: 0.4 }}>📷</span>
